@@ -1,0 +1,30 @@
+name: Terraform Validation
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  validate:
+    name: Validate Module
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_version: [ 1.2.6 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: CSetup terraform ${{ matrix.terraform_version }}
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ matrix.terraform_version }}
+
+      - name: Initilize terraform
+        id: init
+        run: terraform init
+
+      - name: Validate terraform module
+        id: validate
+        run: terraform validate
